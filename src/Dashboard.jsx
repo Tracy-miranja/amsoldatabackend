@@ -61,8 +61,7 @@ const Dashboard = () => {
       cv
       });
       alert('User added successfully');
-      setShowForm(false); // Close the form
-      // Optionally refetch users after adding a new one
+      setShowForm(false);
       const response = await axios.get('http://localhost:5000/Api/users');
       setUsers(response.data.data);
     } catch (error) {
@@ -110,7 +109,7 @@ const Dashboard = () => {
 
         {/* Add User Button */}
         <button
-          className='bg-gradient-to-r from-teal-400 to-blue-500 text-white px-4 py-2 rounded mb-4'
+          className='bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 rounded mb-4'
           onClick={() => setShowForm(true)}
         >
           Add User
