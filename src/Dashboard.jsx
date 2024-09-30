@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaUser } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import OverView from './overview';
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
@@ -14,13 +16,20 @@ const Dashboard = () => {
   const [lastName, setLastName] = useState('');
   const [location, setLocation] = useState('');
   const [specialization, setSpecialization] = useState('');
+  const [gender, setGender] = useState('');
+  const [academic, setAcademic] = useState('');
+  const [workExperience, setWorkExperience] = useState({});
+  const [salaryInfo, setSalaryInfo] = useState('');
+  const [cv, setCv] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:5000/Api/users');
-        setUsers(response.data.data);
+        const sortedUsers = response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setUsers(sortedUsers);
       } catch (error) {
+        console.error(error);
         setError('Error fetching user data');
       }
     };
@@ -50,20 +59,21 @@ const Dashboard = () => {
     e.preventDefault();
     try {
       await axios.post('http://localhost:5000/Api/users', {
-      firstName,
-      lastName,
-      gender,
-      location,
-      academic,
-      workExperience, 
-      specialization,
-      salaryInfo,
-      cv
+        firstName,
+        lastName,
+        gender,
+        location,
+        academic,
+        workExperience,
+        specialization,
+        salaryInfo,
+        cv,
       });
       alert('User added successfully');
       setShowForm(false);
       const response = await axios.get('http://localhost:5000/Api/users');
-      setUsers(response.data.data);
+      const sortedUsers = response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setUsers(sortedUsers);
     } catch (error) {
       alert('Error saving user data');
     }
@@ -72,19 +82,19 @@ const Dashboard = () => {
   return (
     <div className='flex h-[100vh] w-[100%] mt-0'>
       {/* Sidebar */}
-      <div className='w-[10%] shadow-xl  bg-gradient-to-r from-purple-400 via-pink-500 to-red-400 p-5 pt-20 flex flex-col'>
+      <div className='w-[10%] shadow-xl  bg-gradient-to-r from-blue-400  to-blue-500 p-5 pt-20 flex flex-col'>
         <div className='w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden'>
           <FaUser className='text-blue-500 text-4xl' />
         </div>
         <div className='flex flex-col pt-8 text-white'>
-          <a className='text-white pt-2'>Dashboard</a>
-          <a className='text-white pt-2'>Overview</a>
+          <Link to="/" className='text-white pt-2'>Dashboard</Link>
+          <Link to="/overview" className='text-white pt-2'>Overview</Link>
         </div>
       </div>
 
       {/* Main Content */}
       <div className='contain mx-auto'>
-        <h4 className='text-xl font-bold text-center text-white mb-6 bg-gradient-to-r from-purple-400 via-pink-500 to-red-400 p-2 rounded'>
+        <h4 className='text-xl font-bold text-center text-white mb-6 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 p-2 rounded'>
           Admin Dashboard
         </h4>
         {error && <p className='text-red-500'>{error}</p>}
@@ -121,6 +131,7 @@ const Dashboard = () => {
             <table className='table-auto w-full bg-white shadow-lg rounded-lg'>
               <thead>
                 <tr className='bg-gray-200 text-gray-700'>
+                  <th className='px-4 py-2'>Time</th>
                   <th className='px-4 py-2'>First Name</th>
                   <th className='px-4 py-2'>Last Name</th>
                   <th className='px-4 py-2'>Gender</th>
@@ -135,11 +146,12 @@ const Dashboard = () => {
               <tbody>
                 {currentUsers.map((user) => (
                   <tr key={user._id} className='border-b text-center'>
+                    <td className='px-4 py-2'>{new Date(user.createdAt).toLocaleString()}</td>
                     <td className='px-4 py-2'>{user.firstName}</td>
                     <td className='px-4 py-2'>{user.lastName}</td>
                     <td className='px-4 py-2'>{user.gender}</td>
                     <td className='px-4 py-2'>{user.location}</td>
-                    <td className='px-4 py-2'>{user.academic}</td>
+                    <td className='px-4 py-2'>{user.academicLevel}</td>
                     <td className='px-4 py-2'>
                       {user.workExperience
                         ? Object.values(user.workExperience)
@@ -196,8 +208,8 @@ const Dashboard = () => {
         {/* Modal Form to Add New User */}
         {showForm && (
           <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center'>
-            <div className='bg-white p-8 rounded-lg shadow-lg w-96'>
-              <h2 className='text-2xl font-bold mb-4'>Add New User</h2>
+            <div className='bg-white rounded-lg p-4 shadow-lg'>
+              <h2 className='text-xl font-bold mb-4'>Add New User</h2>
               <form onSubmit={handleSubmit}>
                 <input
                   type='text'
@@ -215,6 +227,16 @@ const Dashboard = () => {
                   className='border rounded p-2 w-full mb-2'
                   required
                 />
+                <select
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                  className='border rounded p-2 w-full mb-2'
+                  required
+                >
+                  <option value=''>Select Gender</option>
+                  <option value='Male'>Male</option>
+                  <option value='Female'>Female</option>
+                </select>
                 <input
                   type='text'
                   placeholder='Location'
@@ -225,32 +247,41 @@ const Dashboard = () => {
                 />
                 <input
                   type='text'
-                  placeholder='Specialization'
-                  value={specialization}
-                  onChange={(e) => setSpecialization(e.target.value)}
+                  placeholder='Academic Qualification'
+                  value={academic}
+                  onChange={(e) => setAcademic(e.target.value)}
                   className='border rounded p-2 w-full mb-2'
                   required
                 />
                 <input
                   type='text'
-                  placeholder='Specialization'
-                  value={specialization}
-                  onChange={(e) => setSpecialization(e.target.value)}
+                  placeholder='Work Experience'
+                  value={workExperience.company1 || ''}
+                  onChange={(e) => setWorkExperience({ ...workExperience, company1: e.target.value })}
                   className='border rounded p-2 w-full mb-2'
-                  required
                 />
-                <div className='flex justify-between mt-4'>
-                  <button type='submit' className='bg-green-500 text-white px-4 py-2 rounded'>
-                    Add User
-                  </button>
-                  <button
-                    type='button'
-                    onClick={() => setShowForm(false)}
-                    className='bg-red-500 text-white px-4 py-2 rounded'
-                  >
-                    Cancel
-                  </button>
-                </div>
+                <input
+                  type='text'
+                  placeholder='Salary Info'
+                  value={salaryInfo}
+                  onChange={(e) => setSalaryInfo(e.target.value)}
+                  className='border rounded p-2 w-full mb-2'
+                />
+                <input
+                  type='file'
+                  onChange={(e) => setCv(e.target.files[0])}
+                  className='border rounded p-2 w-full mb-2'
+                />
+                <button type='submit' className='bg-blue-500 text-white px-4 py-2 rounded'>
+                  Add User
+                </button>
+                <button
+                  type='button'
+                  onClick={() => setShowForm(false)}
+                  className='bg-red-500 text-white px-4 py-2 rounded ml-2'
+                >
+                  Cancel
+                </button>
               </form>
             </div>
           </div>

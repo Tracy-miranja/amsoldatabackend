@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import Dashboard from './Dashboard'
+import Dashboard from './Dashboard';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Overview from './overview';
 
 function App() {
- 
   return (
-    <>
-      <div>
-    
-        <Dashboard />
-      </div>
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Dashboard />} /> 
+        <Route path="/overview" element={<Overview />} /> 
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
