@@ -35,7 +35,9 @@ const OverView = () => {
   };
 
   return (
-    <div className='overview-container'>
+    <div className='flex w-full h-[100vh]'>
+        <div className='sidenav w-[20%] h-5 bg-blue-400'></div>
+    <div className='overview-container w-[80%]'>
       <h2 className='text-center text-white text-2xl font-bold mb-4'>Specialization Overview</h2>
       <div className='grid grid-cols-2 gap-4'>
         {Object.entries(specializations).map(([specialization, count]) => (
@@ -66,6 +68,7 @@ const OverView = () => {
           )}
         </div>
       )}
+    </div>
     </div>
   );
 };

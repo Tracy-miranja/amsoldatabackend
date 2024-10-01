@@ -10,7 +10,7 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
   const [searchSpecialization, setSearchSpecialization] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(10); // Number of users per page
+  const [usersPerPage] = useState(7); // Number of users per page
   const [showForm, setShowForm] = useState(false); // State to show/hide form
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -86,7 +86,7 @@ const Dashboard = () => {
         <div className='w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden'>
           <FaUser className='text-blue-500 text-4xl' />
         </div>
-        <div className='flex flex-col pt-8 text-white'>
+        <div className='flex flex-col pt-8 text-white h-[100%]'>
           <Link to="/" className='text-white pt-2'>Dashboard</Link>
           <Link to="/overview" className='text-white pt-2'>Overview</Link>
         </div>
@@ -94,13 +94,16 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <div className='contain mx-auto'>
-        <h4 className='text-xl font-bold text-center text-white mb-6 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 p-2 rounded'>
+        <div className='bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 p-2 rounded w-full mb-4'>
+        <h4 className='text-xl font-bold text-center text-white mb-6'>
           Admin Dashboard
         </h4>
+        </div>
+        
         {error && <p className='text-red-500'>{error}</p>}
 
         {/* Search Filters */}
-        <div className='flex justify-between mb-4 p-2'>
+        <div className='flex  gap-2 mb-4 p-2 justify-center'>
           <input
             type='text'
             placeholder='Search by Location'
@@ -118,12 +121,12 @@ const Dashboard = () => {
         </div>
 
         {/* Add User Button */}
-        <button
+        {/* <button
           className='bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 rounded mb-4'
           onClick={() => setShowForm(true)}
         >
           Add User
-        </button>
+        </button> */}
 
         {/* Users Table */}
         {currentUsers.length > 0 ? (
@@ -149,16 +152,16 @@ const Dashboard = () => {
                     <td className='px-4 py-2'>{new Date(user.createdAt).toLocaleString()}</td>
                     <td className='px-4 py-2'>{user.firstName}</td>
                     <td className='px-4 py-2'>{user.lastName}</td>
-                    <td className='px-4 py-2'>{user.gender}</td>
+                    <td className='px-4 py-2'>{user.email}</td>
                     <td className='px-4 py-2'>{user.location}</td>
                     <td className='px-4 py-2'>{user.academicLevel}</td>
                     <td className='px-4 py-2'>
-                      {user.workExperience
-                        ? Object.values(user.workExperience)
-                            .filter(Boolean)
-                            .join(', ') || 'No experience listed'
-                        : 'No experience listed'}
-                    </td>
+  {user.workExperience && user.workExperience.length > 0
+    ? `${user.workExperience[0].company}`
+    : 'No experience listed'}
+</td>
+
+
                     <td className='px-4 py-2'>{user.salaryInfo}</td>
                     <td className='px-4 py-2'>{user.specialization}</td>
                     <td className='px-4 py-2'>
