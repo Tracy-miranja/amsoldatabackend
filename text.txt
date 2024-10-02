@@ -1,0 +1,27 @@
+<p>
+          <strong>WorkExperience:</strong>
+          <td className="px-4 py-2">
+            {user.workExperience.length > 0
+              ? user.workExperience.map((experience, index) => (
+                  <div key={experience._id}>
+                    <p>
+                      <strong>Company:</strong> {experience.company}
+                    </p>
+                    <p>
+                      <strong>Duration:</strong> {experience.duration} years
+                    </p>
+                    <p>
+                      <strong>Position:</strong> {experience.position}
+                    </p>
+                    {experience.position && (
+                      <p>
+                        <strong>Position:</strong> {experience.position}
+                      </p>
+                    )}
+                  </div>
+                ))
+              : "No experience listed"}
+          </td>
+        </p>
+
+       

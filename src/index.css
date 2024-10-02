@@ -66,6 +66,15 @@ body{
   width: 100%;
 }
 
+.popimage {
+  background-image: url("./assets/jobsinkenya.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 100%; /* Make sure the height covers the parent */
+  width: 50%;
+}
+
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
