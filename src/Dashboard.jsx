@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import UserDetailsModal from './UserDetailsModal';
 import OverView from './overview';
 
 const Dashboard = () => {
@@ -21,6 +22,7 @@ const Dashboard = () => {
   const [workExperience, setWorkExperience] = useState({});
   const [salaryInfo, setSalaryInfo] = useState('');
   const [cv, setCv] = useState('');
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,6 +79,10 @@ const Dashboard = () => {
     } catch (error) {
       alert('Error saving user data');
     }
+  };
+
+  const handleUserClick = (user) => {
+    setSelectedUser(user);
   };
 
   return (
@@ -137,7 +143,7 @@ const Dashboard = () => {
                   <th className='px-4 py-2'>Time</th>
                   <th className='px-4 py-2'>First Name</th>
                   <th className='px-4 py-2'>Last Name</th>
-                  <th className='px-4 py-2'>Gender</th>
+                  <th className='px-4 py-2'>Email</th>
                   <th className='px-4 py-2'>Location</th>
                   <th className='px-4 py-2'>Academic Qualification</th>
                   <th className='px-4 py-2'>Work Experience</th>
@@ -150,7 +156,12 @@ const Dashboard = () => {
                 {currentUsers.map((user) => (
                   <tr key={user._id} className='border-b text-center'>
                     <td className='px-4 py-2'>{new Date(user.createdAt).toLocaleString()}</td>
-                    <td className='px-4 py-2'>{user.firstName}</td>
+                    <td
+                    className='px-4 py-2 text-blue-500 underline cursor-pointer'
+                    onClick={() => handleUserClick(user)}
+                  >
+                    {user.firstName}
+                  </td>
                     <td className='px-4 py-2'>{user.lastName}</td>
                     <td className='px-4 py-2'>{user.email}</td>
                     <td className='px-4 py-2'>{user.location}</td>
@@ -207,6 +218,10 @@ const Dashboard = () => {
         ) : (
           <p className='text-center'>No users available</p>
         )}
+        {/* Show Modal when a user is clicked */}
+      {selectedUser && (
+        <UserDetailsModal user={selectedUser} onClose={() => setSelectedUser(null)} />
+      )}
 
         {/* Modal Form to Add New User */}
         {showForm && (
