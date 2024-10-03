@@ -104,7 +104,7 @@ const UserDetailsModal = ({ user, onClose }) => {
             <button
               onClick={() => {
                 setIsVisible(false);
-                setTimeout(onClose, 300); // Delay the close to allow the transition
+                setTimeout(onClose, 300); 
               }}
               className="bg-red-500 text-white px-4 py-2 rounded mt-4"
             >

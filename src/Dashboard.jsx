@@ -4,6 +4,7 @@ import { FaUser,FaTachometerAlt  } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import UserDetailsModal from "./UserDetailsModal";
 import { FaChartBar } from "react-icons/fa6";
+import logo from "./assets/amsoljobVacancies.png"
 
 
 const Dashboard = () => {
@@ -100,8 +101,9 @@ const Dashboard = () => {
   return (
     <div className="flex h-[100vh] w-[100%] mt-0">
       {/* Sidebar */}
-      <div className="w-[10%] shadow-xl  bg-gradient-to-r from-blue-400  to-blue-500 p-5 pt-20 flex flex-col">
-        <div className="w-20 h-24 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
+      <div className="w-[10%] shadow-xl  bg-blue-400 p-5 flex flex-col">
+        <div className="bg-white w-[100%]"><img src={logo} alt="amsol" /></div>
+        <div className="w-20 h-24 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden mt-10">
           <FaUser className="text-blue-500 text-4xl" />
         </div>
         <div className="flex flex-col pt-8 text-white h-[100%]">
