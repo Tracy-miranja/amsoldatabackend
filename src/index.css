@@ -66,13 +66,16 @@ body{
   width: 100%;
 }
 
-.popimage {
-  background-image: url("./assets/jobsinkenya.jpg");
-  background-size: cover;
+.ModalImage {
+  background-image: url("./assets/pixabay.jpg");
+  background-size:cover;
   background-position: center;
-  height: 100%; /* Make sure the height covers the parent */
-  width: 50%;
+  height: 100%; 
+  background-repeat: no-repeat;
+  
 }
+
+
 
 
 @media (prefers-color-scheme: light) {

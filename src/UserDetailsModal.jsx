@@ -1,6 +1,6 @@
 import { FaUser } from "react-icons/fa";
 import { useState, useEffect } from "react";
-import bgimage from "./assets/jobsinkenya.jpg"
+import jobsInKenyaImage from './assets/tombrand.jpg';
 
 const UserDetailsModal = ({ user, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -21,22 +21,19 @@ const UserDetailsModal = ({ user, onClose }) => {
         }`}
       >
         {/* Container for the image and user details */}
-        <div className="flex w-[100%] h-full">
+        <div className=" ModalImage flex w-[100%] h-full">
           {/* Left column for the image */}
           <div
-            className="w-[50%] flex items-center justify-center"
-            style={{
-              backgroundImage: `url(${bgimage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              height: "100%",
-            }}
-          ></div>
+  className=" w-[50%] h-[400px] flex items-center justify-center bg-cover bg-center">
+    
+  </div>
+
+
 
           {/* Right column for the user details */}
-          <div className="w-[50%] p-4 shadow-2xl">
+          <div className="w-[50%] p-4 shadow-2xl bg-blue-100">
             <div className="mb-4 flex flex-row items-center gap-3">
-              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center overflow-hidden">
                 <FaUser className="text-blue-500 text-3xl" />
               </div>
               <div>

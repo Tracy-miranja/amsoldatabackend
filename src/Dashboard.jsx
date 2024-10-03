@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaUser } from "react-icons/fa";
+import { FaUser,FaTachometerAlt  } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import UserDetailsModal from "./UserDetailsModal";
-import OverView from "./overview";
+import { FaChartBar } from "react-icons/fa6";
+
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
@@ -100,15 +101,17 @@ const Dashboard = () => {
     <div className="flex h-[100vh] w-[100%] mt-0">
       {/* Sidebar */}
       <div className="w-[10%] shadow-xl  bg-gradient-to-r from-blue-400  to-blue-500 p-5 pt-20 flex flex-col">
-        <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
+        <div className="w-20 h-24 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
           <FaUser className="text-blue-500 text-4xl" />
         </div>
         <div className="flex flex-col pt-8 text-white h-[100%]">
-          <Link to="/" className="text-white pt-2">
-            Dashboard
+          <Link to="/" className="text-white pt-2 flex ">
+          <FaTachometerAlt className="text-blue-100 text-2xl mr-2" />
+            <span>Dashboard</span>
           </Link>
-          <Link to="/overview" className="text-white pt-2">
-            Overview
+          <Link to="/overview" className="text-white pt-2 flex items-center">
+          <FaChartBar className="mr-2" />
+            <span>Overview</span>
           </Link>
         </div>
       </div>
