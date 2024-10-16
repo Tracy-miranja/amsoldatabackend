@@ -98,7 +98,7 @@ const Form = () => {
             </div>
             <div className="flex items-center justify-center"><button type="submit" className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-800 mt-2 w-[100px]">Log in</button></div>
             
-            <Link className="pt-5 underline text-blue-700" to="/forgot-password">Forgot Password?</Link> {/* Link to password recovery */}
+            <Link className="pt-5 underline text-blue-700" to="/Signup">Create account</Link> {/* Link to password recovery */}
           </form>
           
           {message && <p className="mt-4 text-green-500">{message}</p>}
