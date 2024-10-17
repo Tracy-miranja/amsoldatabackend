@@ -30,18 +30,27 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/applications");
-        const sortedUsers = response.data.data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
-        setUsers(sortedUsers);
+        console.log(response.data); // Log the entire response
+        
+        // Instead of checking for response.data.data, check if response.data is an array
+        if (response.data && Array.isArray(response.data)) {
+          const sortedUsers = response.data.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          );
+          setUsers(sortedUsers);
+        } else {
+          console.error("Data is not an array:", response.data);
+          setError("Unexpected data format");
+        }
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching data:", error.response ? error.response.data : error.message);
         setError("Error fetching user data");
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   // Filter users by location and specialization
   const filteredUsers = users.filter((user) => {
@@ -84,7 +93,7 @@ const Dashboard = () => {
       });
       alert("User added successfully");
       setShowForm(false);
-      const response = await axios.get("http://localhost:5000/Api/users");
+      const response = await axios.get("http://localhost:5000/api/users");
       const sortedUsers = response.data.data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
@@ -115,6 +124,7 @@ const Dashboard = () => {
           <FaChartBar className="mr-2" />
             <span>Overview</span>
           </Link>
+          <Link to="/ExcelUpload" className="text-white pt-2 flex items-center"><FaChartBar className="mr-2" />upload data</Link>
         </div>
       </div>
 

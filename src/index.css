@@ -74,6 +74,39 @@ body{
   
 }
 
+/* src/ExcelUpload.css */
+.upload-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #f9f9f9;
+  
+  
+}
+
+.dropzone {
+  border: 2px dashed #0070f3;
+  padding: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.dropzone:hover {
+  border-color: #0056b3;
+}
+
+.wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10%;
+}
+
+
 
 
 

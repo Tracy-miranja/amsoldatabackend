@@ -20,7 +20,7 @@ const Form = () => {
   
       console.log(response.data);
   
-      const { message, role } = response.data; // Destructure the response to get the message and role
+      const { message, role } = response.data; 
   
       setEmail("");
       setPassword("");
