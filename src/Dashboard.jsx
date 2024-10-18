@@ -1,72 +1,60 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaUser,FaTachometerAlt  } from "react-icons/fa";
+import { FaUser, FaTachometerAlt } from "react-icons/fa";
+import { FaChartBar } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import UserDetailsModal from "./UserDetailsModal";
-import { FaChartBar } from "react-icons/fa6";
-import logo from "./assets/amsoljobVacancies.png"
-
+import logo from "./assets/amsoljobVacancies.png";
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
-  const [searchLocation, setSearchLocation] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // Global search state
   const [error, setError] = useState(null);
-  const [searchSpecialization, setSearchSpecialization] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(7); // Number of users per page
-  const [showForm, setShowForm] = useState(false); // State to show/hide form
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [location, setLocation] = useState("");
-  const [specialization, setSpecialization] = useState("");
-  const [gender, setGender] = useState("");
-  const [academic, setAcademic] = useState("");
-  const [workExperience, setWorkExperience] = useState({});
-  const [salaryInfo, setSalaryInfo] = useState("");
-  const [cv, setCv] = useState("");
+  const [usersPerPage] = useState(7); // Users per page
   const [selectedUser, setSelectedUser] = useState(null);
 
+  // Fetch data from API on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/applications");
-        console.log(response.data); // Log the entire response
-        
-        // Instead of checking for response.data.data, check if response.data is an array
+        const response = await axios.get(
+          "https://amsol-api.onrender.com/api/applications"
+        );
+
         if (response.data && Array.isArray(response.data)) {
           const sortedUsers = response.data.sort(
             (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
           );
           setUsers(sortedUsers);
         } else {
-          console.error("Data is not an array:", response.data);
           setError("Unexpected data format");
         }
       } catch (error) {
-        console.error("Error fetching data:", error.response ? error.response.data : error.message);
         setError("Error fetching user data");
       }
     };
-  
+
     fetchData();
   }, []);
-  
 
-  // Filter users by location and specialization
+  // Filter users by multiple fields
   const filteredUsers = users.filter((user) => {
-    const matchesLocation =
-      user.location &&
-      user.location.toLowerCase().includes(searchLocation.toLowerCase());
-    const matchesSpecialization =
-      user.specialization &&
-      user.specialization
-        .toLowerCase()
-        .includes(searchSpecialization.toLowerCase());
+    // Split the search input into terms
+    const searchTerms = searchTerm.toLowerCase().split(',').map(term => term.trim());
 
-    return (
-      (matchesLocation || !searchLocation) &&
-      (matchesSpecialization || !searchSpecialization)
+    // Check if the user matches any of the search terms
+    const matchesAnyField = searchTerms.some(term => 
+      (user.firstName && user.firstName.toLowerCase().includes(term)) ||
+      (user.lastName && user.lastName.toLowerCase().includes(term)) ||
+      (user.email && user.email.toLowerCase().includes(term)) ||
+      (user.location && user.location.toLowerCase().includes(term)) ||
+      (user.academicLevel && user.academicLevel.toLowerCase().includes(term)) ||
+      (user.specialization && user.specialization.toLowerCase().includes(term)) ||
+      (user.workExperience && user.workExperience.some(exp => exp.company.toLowerCase().includes(term))) // Adjust this based on your structure
     );
+
+    return matchesAnyField;
   });
 
   // Pagination logic
@@ -76,93 +64,51 @@ const Dashboard = () => {
 
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
-  // Handle form submission to add a new user
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post("http://localhost:5000/api/applications", {
-        firstName,
-        lastName,
-        gender,
-        location,
-        academic,
-        workExperience,
-        specialization,
-        salaryInfo,
-        cv,
-      });
-      alert("User added successfully");
-      setShowForm(false);
-      const response = await axios.get("http://localhost:5000/api/users");
-      const sortedUsers = response.data.data.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
-      setUsers(sortedUsers);
-    } catch (error) {
-      alert("Error saving user data");
-    }
-  };
-
-  const handleUserClick = (user) => {
-    setSelectedUser(user);
-  };
+  const handleUserClick = (user) => setSelectedUser(user);
 
   return (
-    <div className="flex h-[100vh] w-[100%] mt-0">
+    <div className="flex h-[100vh] w-[100%]">
       {/* Sidebar */}
-      <div className="w-[10%] shadow-xl  bg-blue-400 p-5 flex flex-col">
-        <div className="bg-white w-[100%]"><img src={logo} alt="amsol" /></div>
-        <div className="w-20 h-24 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden mt-10">
+      <div className="w-[10%] shadow-xl bg-blue-400 p-5 flex flex-col">
+        <div className="bg-white w-[100%]">
+          <img src={logo} alt="amsol" />
+        </div>
+        <div className="w-20 h-24 bg-blue-100 rounded-full flex items-center justify-center mt-10">
           <FaUser className="text-blue-500 text-4xl" />
         </div>
-        <div className="flex flex-col pt-8 text-white h-[100%]">
-          <Link to="/" className="text-white pt-2 flex ">
-          <FaTachometerAlt className="text-blue-100 text-2xl mr-2" />
-            <span>Dashboard</span>
+        <div className="flex flex-col pt-8 text-white">
+          <Link to="/" className="text-white pt-2 flex">
+            <FaTachometerAlt className="text-2xl mr-2" />
+            Dashboard
           </Link>
           <Link to="/overview" className="text-white pt-2 flex items-center">
-          <FaChartBar className="mr-2" />
-            <span>Overview</span>
+            <FaChartBar className="mr-2" />
+            Overview
           </Link>
-          <Link to="/ExcelUpload" className="text-white pt-2 flex items-center"><FaChartBar className="mr-2" />upload data</Link>
+          <Link to="/ExcelUpload" className="text-white pt-2 flex items-center">
+            <FaChartBar className="mr-2" /> Upload Data
+          </Link>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="contain mx-auto">
-        <div className="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 p-2 rounded w-full mb-4">
-          <h4 className="text-xl font-bold text-center text-white mb-6">
-            Admin Dashboard
-          </h4>
+      <div className="contain mx-auto w-[90%] p-1">
+        <div className="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 p-2 rounded mb-4">
+          <h4 className="text-xl font-bold text-center text-white">Admin Dashboard</h4>
         </div>
 
         {error && <p className="text-red-500">{error}</p>}
 
-        {/* Search Filters */}
-        <div className="flex  gap-2 mb-4 p-2 justify-center">
+        {/* Global Search Bar */}
+        <div className="flex justify-center mb-4">
           <input
             type="text"
-            placeholder="Search by Location"
-            className="border rounded p-2 w-1/3"
-            value={searchLocation}
-            onChange={(e) => setSearchLocation(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Search by Specialization"
-            className="border rounded p-2 w-1/3"
-            value={searchSpecialization}
-            onChange={(e) => setSearchSpecialization(e.target.value)}
+            placeholder="Search anything..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border rounded p-2 w-2/3"
           />
         </div>
-
-        {/* Add User Button */}
-        {/* <button
-          className='bg-gradient-to-r from-blue-400 to-blue-500 text-white px-4 py-2 rounded mb-4'
-          onClick={() => setShowForm(true)}
-        >
-          Add User
-        </button> */}
 
         {/* Users Table */}
         {currentUsers.length > 0 ? (
@@ -198,8 +144,8 @@ const Dashboard = () => {
                     <td className="px-4 py-2">{user.location}</td>
                     <td className="px-4 py-2">{user.academicLevel}</td>
                     <td className="px-4 py-2">
-                      {user.workExperience && user.workExperience.length > 0
-                        ? `${user.workExperience[0].company}`
+                      {user.workExperience?.length > 0
+                        ? user.workExperience[0].company
                         : "No experience listed"}
                     </td>
                     <td className="px-4 py-2">{user.specialization}</td>
@@ -226,122 +172,33 @@ const Dashboard = () => {
             <div className="flex justify-between mt-4">
               <button
                 disabled={currentPage === 1}
-                onClick={() => setCurrentPage(currentPage - 1)}
-                className="bg-blue-500 text-white px-4 py-2 rounded"
+                onClick={() => setCurrentPage((prev) => prev - 1)}
+                className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
               >
                 Previous
               </button>
-              <span className="self-center">
+              <span>
                 Page {currentPage} of {totalPages}
               </span>
               <button
                 disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage(currentPage + 1)}
-                className="bg-blue-500 text-white px-4 py-2 rounded"
+                onClick={() => setCurrentPage((prev) => prev + 1)}
+                className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
               >
                 Next
               </button>
             </div>
           </div>
         ) : (
-          <p className="text-center">No users available</p>
+          <p>No users found</p>
         )}
-        {/* Show Modal when a user is clicked */}
+
+        {/* User Details Modal */}
         {selectedUser && (
           <UserDetailsModal
             user={selectedUser}
             onClose={() => setSelectedUser(null)}
           />
-        )}
-
-        {/* Modal Form to Add New User */}
-        {showForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white rounded-lg p-4 shadow-lg">
-              <h2 className="text-xl font-bold mb-4">Add New User</h2>
-              <form onSubmit={handleSubmit}>
-                <input
-                  type="text"
-                  placeholder="First Name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="border rounded p-2 w-full mb-2"
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="Last Name"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="border rounded p-2 w-full mb-2"
-                  required
-                />
-                <select
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  className="border rounded p-2 w-full mb-2"
-                  required
-                >
-                  <option value="">Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
-                <input
-                  type="text"
-                  placeholder="Location"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="border rounded p-2 w-full mb-2"
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="Academic Qualification"
-                  value={academic}
-                  onChange={(e) => setAcademic(e.target.value)}
-                  className="border rounded p-2 w-full mb-2"
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="Work Experience"
-                  value={workExperience.company1 || ""}
-                  onChange={(e) =>
-                    setWorkExperience({
-                      ...workExperience,
-                      company1: e.target.value,
-                    })
-                  }
-                  className="border rounded p-2 w-full mb-2"
-                />
-                <input
-                  type="text"
-                  placeholder="Salary Info"
-                  value={salaryInfo}
-                  onChange={(e) => setSalaryInfo(e.target.value)}
-                  className="border rounded p-2 w-full mb-2"
-                />
-                <input
-                  type="file"
-                  onChange={(e) => setCv(e.target.files[0])}
-                  className="border rounded p-2 w-full mb-2"
-                />
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                  Add User
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="bg-red-500 text-white px-4 py-2 rounded ml-2"
-                >
-                  Cancel
-                </button>
-              </form>
-            </div>
-          </div>
         )}
       </div>
     </div>

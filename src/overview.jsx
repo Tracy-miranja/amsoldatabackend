@@ -13,7 +13,7 @@ const OverView = () => {
   useEffect(() => {
     const fetchSpecializations = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/Api/specialization');
+        const response = await axios.get('https://amsol-api.onrender.com/api/applications');
         setSpecializations(response.data);
       } catch (error) {
         console.error('Error fetching specializations:', error);
@@ -46,7 +46,7 @@ const OverView = () => {
           <FaUser className="text-blue-500 text-4xl" />
         </div>
         <div className="flex flex-col pt-8 text-white h-[100%]">
-          <Link to="/" className="text-white pt-2 flex ">
+          <Link to="/Dashboard" className="text-white pt-2 flex ">
           <FaTachometerAlt className="text-blue-100 text-2xl mr-2" />
             <span>Dashboard</span>
           </Link>

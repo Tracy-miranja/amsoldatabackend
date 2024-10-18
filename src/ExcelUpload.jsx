@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 import logo from "./assets/amsoljobVacancies.png"
+import { Link } from 'react-router-dom';
 
 
 const ExcelUpload = () => {
@@ -33,7 +34,15 @@ const ExcelUpload = () => {
 
   return (
     <div>
-   <div className='flex w-[100%] bg-blue-400 h-[8vh] p-1 '><img src={logo} alt="amsol" className='w-[9%]'/></div>
+   <div className="flex w-full bg-blue-400 h-[8vh] p-10 justify-around items-center">
+  <div className="w-auto">
+    <img src={logo} alt="amsol" className="w-[9%]" />
+  </div>
+  <div className="w-auto">
+    <Link to="/Dashboard" className="block text-white text-2xl">Dashboard</Link>
+  </div>
+</div>
+
     <div className='wrapper'>
     <div className="upload-container">
       <h2>Upload Excel File</h2>
