@@ -152,7 +152,7 @@ const Dashboard = () => {
                     <td className="px-4 py-2">
                       {user.cv ? (
                         <a
-                          href={`http://localhost:5000/uploads/${user.cv}`}
+                          href={`https://amsol-api.onrender.com/uploads/${user.cv}`}
                           className="text-blue-600 underline"
                           target="_blank"
                           rel="noopener noreferrer"

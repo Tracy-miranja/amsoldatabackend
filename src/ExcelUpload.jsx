@@ -12,7 +12,7 @@ const ExcelUpload = () => {
     formData.append('file', acceptedFiles[0]); // Append the first uploaded file
 
     try {
-      const response = await axios.post('http://localhost:5000/upload-excel', formData, {
+      const response = await axios.post('https://amsol-api.onrender.com/upload-excel', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
