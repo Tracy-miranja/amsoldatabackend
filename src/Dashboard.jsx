@@ -8,7 +8,8 @@ import logo from "./assets/amsoljobVacancies.png";
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(""); // Global search state
+  const [location, setLocation] = useState(""); // Location search state
+  const [specialization, setSpecialization] = useState(""); // Specialization search state
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(7); // Users per page
@@ -31,30 +32,19 @@ const Dashboard = () => {
           setError("Unexpected data format");
         }
       } catch (error) {
-        setError("Error fetching user data");
+        setError("Failed to fetch data");
       }
     };
 
     fetchData();
   }, []);
 
-  // Filter users by multiple fields
+  // Filter users by location and specialization
   const filteredUsers = users.filter((user) => {
-    // Split the search input into terms
-    const searchTerms = searchTerm.toLowerCase().split(',').map(term => term.trim());
+    const matchesLocation = user.location?.toLowerCase().includes(location.toLowerCase());
+    const matchesSpecialization = user.specialization?.toLowerCase().includes(specialization.toLowerCase());
 
-    // Check if the user matches any of the search terms
-    const matchesAnyField = searchTerms.some(term => 
-      (user.firstName && user.firstName.toLowerCase().includes(term)) ||
-      (user.lastName && user.lastName.toLowerCase().includes(term)) ||
-      (user.email && user.email.toLowerCase().includes(term)) ||
-      (user.location && user.location.toLowerCase().includes(term)) ||
-      (user.academicLevel && user.academicLevel.toLowerCase().includes(term)) ||
-      (user.specialization && user.specialization.toLowerCase().includes(term)) ||
-      (user.workExperience && user.workExperience.some(exp => exp.company.toLowerCase().includes(term))) // Adjust this based on your structure
-    );
-
-    return matchesAnyField;
+    return matchesLocation && matchesSpecialization; // Both conditions must be met
   });
 
   // Pagination logic
@@ -99,14 +89,21 @@ const Dashboard = () => {
 
         {error && <p className="text-red-500">{error}</p>}
 
-        {/* Global Search Bar */}
+        {/* Search Fields */}
         <div className="flex justify-center mb-4">
           <input
             type="text"
-            placeholder="Search anything..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="border rounded p-2 w-2/3"
+            placeholder="Search by location..."
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            className="border rounded p-2 w-1/3 mx-2"
+          />
+          <input
+            type="text"
+            placeholder="Search by specialization..."
+            value={specialization}
+            onChange={(e) => setSpecialization(e.target.value)}
+            className="border rounded p-2 w-1/3 mx-2"
           />
         </div>
 
@@ -190,7 +187,7 @@ const Dashboard = () => {
             </div>
           </div>
         ) : (
-          <p>No users found</p>
+          <p className="flex text-white justify-center items-center">Please wait, loading...</p>
         )}
 
         {/* User Details Modal */}

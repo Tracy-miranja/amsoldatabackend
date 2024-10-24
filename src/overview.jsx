@@ -1,3 +1,4 @@
+// OverView.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaUser, FaTachometerAlt, FaChartBar } from "react-icons/fa";
@@ -5,6 +6,7 @@ import { Link } from "react-router-dom";
 
 const OverView = () => {
   const [specializationSummary, setSpecializationSummary] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSpecializations = async () => {
@@ -12,9 +14,8 @@ const OverView = () => {
         const response = await axios.get('https://amsol-api.onrender.com/api/applications');
         const applicants = response.data;
 
-        // Group by specialization and count the number of applicants in each
         const summary = applicants.reduce((acc, applicant) => {
-          const { specialization } = applicant; // Adjust according to your data structure
+          const { specialization } = applicant;
           if (!acc[specialization]) {
             acc[specialization] = 0;
           }
@@ -22,7 +23,6 @@ const OverView = () => {
           return acc;
         }, {});
 
-        // Convert the summary object to an array for rendering
         const summaryArray = Object.entries(summary).map(([specialization, count]) => ({
           specialization,
           count,
@@ -31,6 +31,8 @@ const OverView = () => {
         setSpecializationSummary(summaryArray);
       } catch (error) {
         console.error('Error fetching specializations:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -62,17 +64,24 @@ const OverView = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          {specializationSummary.map(({ specialization, count }, index) => (
-            <div
-              key={index} // Use a unique key, consider using an ID if available
-              className="border rounded-lg p-4 bg-blue-100 hover:bg-blue-200 cursor-pointer"
-            >
-              <h3 className="text-lg font-semibold">{specialization}</h3>
-              <p>{count} {count === 1 ? 'applicant' : 'applicants'} in this field</p>
-            </div>
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex justify-center items-center h-full">
+            <p className="text-white">Data is being accumulated...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-4">
+            {specializationSummary.map(({ specialization, count }, index) => (
+              <Link
+                key={index}
+                to={`/specialization/${specialization}`} // Route to SpecializationDetails
+                className="border rounded-lg p-4 bg-blue-100 hover:bg-blue-200 cursor-pointer"
+              >
+                <h3 className="text-lg font-semibold">{specialization}</h3>
+                <p>{count} {count === 1 ? 'applicant' : 'applicants'} in this field</p>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

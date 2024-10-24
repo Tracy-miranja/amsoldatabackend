@@ -106,6 +106,46 @@ body{
   padding: 10%;
 }
 
+/* styles.css or your existing CSS file */
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.loading-text {
+  animation: fade 2s infinite; 
+}
+
+/* styles.css */
+.loading-text {
+  font-size: 1.5rem;
+  color: white;
+  animation: fadeIn 1s ease-in-out; 
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.loading-text {
+  animation: fadeIn 1s ease-in-out, bounce 1s infinite; /* Adding bounce animation */
+}
+
+
+
 
 
 

@@ -16,17 +16,16 @@ const UserDetailsModal = ({ user, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-50">
       <div
-        className={`bg-white rounded-lg shadow-lg w-[90%] p-2 max-w-4xl transform transition-transform duration-300 ${
-          isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0"
-        }`}
+        className={`bg-white rounded-lg shadow-lg w-[90%] p-2 max-w-4xl transform transition-transform duration-300 ${isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0"
+          }`}
       >
         {/* Container for the image and user details */}
         <div className=" ModalImage flex w-[100%] h-full">
           {/* Left column for the image */}
           <div
-  className=" w-[50%] h-[400px] flex items-center justify-center bg-cover bg-center">
-    
-  </div>
+            className=" w-[50%] h-[400px] flex items-center justify-center bg-cover bg-center">
+
+          </div>
 
 
 
@@ -82,6 +81,9 @@ const UserDetailsModal = ({ user, onClose }) => {
                 <p>No experience listed</p>
               )}
             </div>
+            <p>
+              <strong>Years of Experience:</strong> {user.totalExperience}
+            </p>
 
             <p>
               <strong>Salary Info:</strong> {user.salaryInfo}
@@ -104,7 +106,7 @@ const UserDetailsModal = ({ user, onClose }) => {
             <button
               onClick={() => {
                 setIsVisible(false);
-                setTimeout(onClose, 300); 
+                setTimeout(onClose, 300);
               }}
               className="bg-red-500 text-white px-4 py-2 rounded mt-4"
             >
